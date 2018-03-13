@@ -1,6 +1,7 @@
 \documentclass{beamer}
 \usepackage[british]{babel}
-\usepackage{graphics,hyperref,ru,url}
+\usepackage{graphics,hyperref,url}
+\usetheme{Boadilla}
 % title of the presentation
 % - first a short version which is visible at the bottom of each slide;
 % - second the full title shown on the title slide;
@@ -37,12 +38,36 @@
 \section{Introduction}
 \begin{frame}
 	\frametitle{Introduction}
+	Recursive programs are usually very descriptive, easy to code and to understand. However, they can have some issues:
 	\begin{itemize}
-		\item This is just a short example
+		\item Recursive programs are executed by computers and computers have limitations
+		\item Recursion, in computers, is implemented by using a stack
+		\item a Stack is a portion of memory of fixed length. This sets a limit in the amount of invocations of the recursive calls.
+		\item Besides, every recursive call has to push their parameters and local variables into the stack and this is expensive
 		\item The comments in the  \LaTeX\ file are most important
 		\item This is just the result after running pdflatex
 		\item The style is based on the webpage \url{http://www.ru.nl/}
 	\end{itemize}
+\end{frame}
+\section{Tail Recursion}
+\begin{frame}
+	\frametitle{Tail Recursion}
+	Tail recursion definition
+\end{frame}
+\section{Lineal Recursion}
+\begin{frame}
+	\frametitle{Lineal Recursion}
+	Lineal recursion definition
+\end{frame}
+\section{Multiple recursion}
+\begin{frame}
+	\frametitle{Multiple Recursion}
+	Multiple recursion definition
+\end{frame}
+\section{Nested Recursion}
+\begin{frame}
+	\frametitle{Nested Recursion}
+	Nested Recursion definition
 \end{frame}
 \section{Background information}
 
