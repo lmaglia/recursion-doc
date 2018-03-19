@@ -42,11 +42,9 @@
 	\begin{itemize}
 		\item Recursive programs are executed by computers and computers have limitations
 		\item Recursion, in computers, is implemented by using a stack
-		\item a Stack is a portion of memory of fixed length. This sets a limit in the amount of invocations of the recursive calls.
+		\item a Stack is a portion of memory of fixed length. This sets a limit in the amount of invocations of the recursive calls. When such limit is reached, \texttt{StackOverflowException} is thrown
 		\item Besides, every recursive call has to push their parameters and local variables into the stack and this is expensive
-		\item The comments in the  \LaTeX\ file are most important
-		\item This is just the result after running pdflatex
-		\item The style is based on the webpage \url{http://www.ru.nl/}
+		\item Some recursive algorithms repeat calculations, that is, the recursive call is invoked with the same parameters many times. The running time of such algorithms are usually exponential. 
 	\end{itemize}
 \end{frame}
 \section{Tail Recursion}
