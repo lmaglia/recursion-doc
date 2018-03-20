@@ -1,6 +1,11 @@
 \documentclass{beamer}
 \usepackage[british]{babel}
 \usepackage{graphics,hyperref,url}
+\usepackage{amsmath}
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
 \usetheme{Boadilla}
 % title of the presentation
 % - first a short version which is visible at the bottom of each slide;
@@ -50,7 +55,20 @@
 \section{Tail Recursion}
 \begin{frame}
 	\frametitle{Tail Recursion}
-	Tail recursion definition
+	\begin{block}{Tail Recursion}
+		Tail recursion is a special kind of recursion where the recursive call is the very last thing in the function. It's a function that does not do anything at all after recursing.
+		\begin{center}
+				\begin{algorithmic}[1]
+				\Procedure{recurse}{$x$}
+				\If{$x=1$}
+					\State\Return{$1$}
+				\Else
+					\State\Return{\Call{recurse}{$x-1$}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+		\end{center}
+	\end{block}
 \end{frame}
 \section{Lineal Recursion}
 \begin{frame}
