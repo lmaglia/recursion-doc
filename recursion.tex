@@ -59,21 +59,61 @@
 		Tail recursion is a special kind of recursion where the recursive call is the very last thing in the function. It's a function that does not do anything at all after recursing.
 		\begin{center}
 				\begin{algorithmic}[1]
-				\Procedure{recurse}{$x$}
-				\If{$x=1$}
-					\State\Return{$1$}
+					\Procedure{recurse}{$p_0,p_1,\ldots,p_{n-1}$}
+					\If{$g(p_0,p_1,\ldots,p_{n-1})$}
+					\State\Return{$c$}
 				\Else
-					\State\Return{\Call{recurse}{$x-1$}}
+					\State\Return{\Call{recurse}{$p_0',p_1',\ldots,p_{n-1}'$}}
 				\EndIf
 				\EndProcedure
 			\end{algorithmic}
 		\end{center}
 	\end{block}
 \end{frame}
-\section{Lineal Recursion}
 \begin{frame}
-	\frametitle{Lineal Recursion}
-	Lineal recursion definition
+	\frametitle{Tail Recursion}
+	\begin{block}{Example}
+				\begin{algorithmic}[1]
+					\Procedure{gcd}{$a,b$}
+					\If{$b=0$}
+					\State\Return{$a$}
+				\Else
+					\State\Return{\Call{gcd}{$b,a$ mod $b$}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+\section{Linear Recursion}
+\begin{frame}
+	\frametitle{Linear Recursion}
+	\begin{block}{Linear Recursion}
+		A linear recursive function is a function that only makes a single call to itself each ime the function runs, and th recusive call is not the last operation in the function
+				\begin{algorithmic}[1]
+					\Procedure{recurse}{$p_0,p_1,\ldots,p_{n-1}$}
+					\If{$g(p_0,p_1,\ldots,p_{n-1})$}
+					\State\Return{$c$}
+				\Else
+					\State\Return{$f$(\Call{recurse}{$p_0',p_1',\ldots,p_{n-1}'$})}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Linear Recursion}
+	\begin{block}{Example}
+				\begin{algorithmic}[1]
+					\Procedure{factorial}{$n$}
+					\If{$n=0$}
+					\State\Return{$1$}
+				\Else
+					\State\Return{$n\times$ \Call{factorial}{$n-1$}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
 \end{frame}
 \section{Multiple recursion}
 \begin{frame}
