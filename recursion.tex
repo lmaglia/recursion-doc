@@ -6,6 +6,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\MakeRobust{\Call}
 \usetheme{Boadilla}
 % title of the presentation
 % - first a short version which is visible at the bottom of each slide;
@@ -118,31 +119,82 @@
 \section{Multiple recursion}
 \begin{frame}
 	\frametitle{Multiple Recursion}
-	Multiple recursion definition
+	\begin{block}{Multiple Recursion}
+		A multiple recursive function is like a \textit{Linear recursive} function, but there are more than one calls to itself.
+				\begin{algorithmic}[1]
+					\Procedure{recurse}{$p_0,p_1,\ldots,p_{n-1}$}
+					\If{$g(p_0,p_1,\ldots,p_{n-1})$}
+					\State\Return{$c$}
+				\Else
+					\State\Return{$f$(\Call{recurse}{$p_0^0,p_1^0,\ldots,p_{n-1}^0$}, \Call{recurse}{$p_0^1,p_1^1,\ldots,p_{n-1}^1$},$\ldots$, \Call{recurse}{$p_0^{m-1},p_1^{m-1},\ldots,p_{n-1}^{m-1}$})}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursion}
+	\begin{block}{Example}
+			\begin{algorithmic}[1]
+				\Procedure{fibonacci}{$n$}
+				\If{$n=0$}
+					\State\Return{$0$}
+				\Else
+					\If{$n=1$}
+						\State\Return{$1$}
+					\Else
+						\State\Return{\Call{fibonacci}{$n-1$} +  \Call{fibonacci}{$n-2$}}
+					\EndIf
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
 \end{frame}
 \section{Nested Recursion}
 \begin{frame}
 	\frametitle{Nested Recursion}
-	Nested Recursion definition
+	\begin{block}{Nested Recursion}
+		In nested recursion, one of the arguments to the recursive function is the recursive function itself. These functions tend to grow extremely fast. A good example is the classic mathematical function: \textit{Ackermann's function}. It grows very quickly (even for small values of $x$ and $y$, $ackermann(x,y)$ is extremely large) and it cannot be computed with only definite iteration; it requires indefinite iteration 
+			\begin{algorithmic}[1]
+				\Procedure{recurse}{$x,y$}
+				\If{$g(x,y)$}
+					\State\Return{$c$}
+				\Else
+					\State\Return{\Call{recurse}{$x'$,\Call{recurse}{$x''$, $y''$}}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
 \end{frame}
-\section{Background information}
+\begin{frame}
+	\frametitle{Nested Recursion}
+	\begin{block}{Example}
+			\begin{algorithmic}[1]
+				\Procedure{ackermann}{$x,y$}
+				\If{$x=0$}
+					\State\Return{$y+1$}
+				\Else
+					\If{$y=0$}
+						\State\Return{\Call{ackermann}{$x-1,1$}}
+					\Else
+						\State\Return{\Call{ackermann}{$x-1$,\Call{ackermann}{$x$, $y-1$}}}
+					\EndIf
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+
+\section{Recursive to iterative transformation}
 
 \begin{frame}
-	\frametitle{Background information}
-
-	\begin{block}{Slides with \LaTeX}
-	        Beamer offers a lot of functions to create nice slides using \LaTeX.
-	\end{block}
-
-	\begin{block}{The basis}
-		This style uses the following default styles:
-		\begin{itemize}
-		    \item split
-		    \item whale
-		    \item rounded
-		    \item orchid
-		\end{itemize}
-	\end{block}
+	\frametitle{Recursive to iterative transformation}
+	\begin{itemize}
+		\item \textit{Tail recursion} is the easiest one to convert to iterative. We only have to iterate over the parameters until we get to the \textit{base case}.
+		\item \textit{Linear Recursion}, we have to convert the \textit{Linear recrusive} fucntion to a \textit{Tail recursive} function. This is generally carried out by adding a new parameter to the function, which acts as an \textit{accumulator}
+		\item \textit{Nested Recursion} is generally converted to a \textit{Tail Recursion} form by adding a \textit{Stack} to its parameters and using the \textit{fold/unfold} technique.
+		\item \textit{Multiple recursion} is usually converted to a \textit{Nested Recursion} form by adding a new parameter and generalizing its \textit{range}, that is, what it returns. We already know how to convert a \textit{Nested Recursion} form to a \textit{Tail recursion} form
+	\end{itemize}
 \end{frame}
 
 \section{The important things}
