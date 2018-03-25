@@ -6,6 +6,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+%\usepackage{algorithm2e,float}
 \MakeRobust{\Call}
 \usetheme{Boadilla}
 % title of the presentation
@@ -327,6 +328,63 @@
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion to Iterative Transformation}
+	Now, we will try to tranform our recursive \textit{Ackermann} function into an iterative one. To do so, we will propose a new function such that for some intial values of its parameters, it will equal to \textit{Ackermann}. This new function will replace the \textit{Ackermann}'s first parameter $x$ with an \textit{Stack} $p$. Besides, this new function is \textit{Tail Recursive}
+	\begin{block}{Recursive version}
+		\begin{algorithmic}[1]
+			\Procedure{t-ackermann}{$p,y$}
+				\If{$isEmpty(p)$}
+					\State\Return{$y$}
+				\Else
+					\State\Return{\Call{t-ackermann}{$pop(p)$,\Call{ackermann}{$top(p),y$}}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion to Iterative Transformation}
+	Let's now unfold \textit{ackermann}
+	\begin{block}{Unfolding...}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{t-ackermann}{$p,y$}
+				\If{$isEmpty(p)$}
+					\State\Return{$y$}
+				\Else
+					\If{$top(p) = 0$}
+						\State\Return{\Call{t-ackermann}{$pop(p),y+1$}}
+					\Else
+						\If{$y = 0$}
+							\State\Return{\Call{t-ackermann}{$pop(p)$,\Call{ackermann}{$top(p)-1,1$}}}
+						\Else
+							\State\Return{\Call{t-ackermann}{$pop(p)$, \Call{ackermann}{$top(p)-1$,\Call{ackermann}{$top(p), y-1$}}}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Nested Recursion to Iterative Transformation}
+	We now have three recursive calls.
+	\begin{itemize}
+		\item the first one is in line number $6$. It is \textit{Tail Recursive}. We don't have to do anything here.
+		\item the second one is in line number $9$. It is \textit{Tail Recursive}, but it still contains an invocation to \textit{ackermann} function. We have to get rid of this invocation
+		\item the third one is in line number $11$. It is also \textit{Tail Recursive}, but it still contains a \textit{Nested} invocation to \textit{ackermann} function. We have to get rid of these invocations too.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion to Iterative Transformation}
+	Now, we will convert line number $6$ into a \textit{Tail Recursive} form without any reference to \textit{ackermann}.\\ This line looks like the line number $5$ in our \textit{t-ackermann} definition. Thus, we can \textbf{fold} it and we get this:
+	\begin{equation}
+		t-ackermann(pop(p),ackermann(top(p)-1,1)) = t-ackermann(push(top(p)-1,pop(9)),1)
+	\end{equation}
+
 \end{frame}
 \section{The important things}
 
