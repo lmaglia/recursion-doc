@@ -89,7 +89,7 @@
 \begin{frame}
 	\frametitle{Linear Recursion}
 	\begin{block}{Linear Recursion}
-		A linear recursive function is a function that only makes a single call to itself each ime the function runs, and th recusive call is not the last operation in the function
+		A linear recursive function is a function that only makes a single call to itself each time the function runs, and th recusive call is not the last operation in the function
 				\begin{algorithmic}[1]
 					\Procedure{recurse}{$p_0,p_1,\ldots,p_{n-1}$}
 					\If{$g(p_0,p_1,\ldots,p_{n-1})$}
@@ -191,12 +191,143 @@
 	\frametitle{Recursive to iterative transformation}
 	\begin{itemize}
 		\item \textit{Tail recursion} is the easiest one to convert to iterative. We only have to iterate over the parameters until we get to the \textit{base case}.
-		\item \textit{Linear Recursion}, we have to convert the \textit{Linear recrusive} fucntion to a \textit{Tail recursive} function. This is generally carried out by adding a new parameter to the function, which acts as an \textit{accumulator}
+		\item \textit{Linear Recursion}, we have to convert the \textit{Linear Recursive} fucntion to a \textit{Tail Recursive} function. This is generally carried out by adding a new parameter to the function, which acts as an \textit{accumulator}
 		\item \textit{Nested Recursion} is generally converted to a \textit{Tail Recursion} form by adding a \textit{Stack} to its parameters and using the \textit{fold/unfold} technique.
-		\item \textit{Multiple recursion} is usually converted to a \textit{Nested Recursion} form by adding a new parameter and generalizing its \textit{range}, that is, what it returns. We already know how to convert a \textit{Nested Recursion} form to a \textit{Tail recursion} form
+		\item \textit{Multiple Recursion} is usually converted to a \textit{Nested Recursion} form by adding a new parameter and generalizing its \textit{range}, that is, what it returns. We already know how to convert a \textit{Nested Recursion} form to a \textit{Tail Recursion} form
 	\end{itemize}
 \end{frame}
-
+\begin{frame}
+	\frametitle{Tail Recursion to Iterative Transformation}
+	Let's convert recursive \textit{GCD} to an iterative version.
+	\begin{block}{Recursive Version}
+				\begin{algorithmic}[1]
+					\Procedure{gcd}{$a,b$}
+					\If{$b=0$}
+					\State\Return{$a$}
+				\Else
+					\State\Return{\Call{gcd}{$b,a$ mod $b$}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}	
+\end{frame}
+\begin{frame}
+	\frametitle{Tail Recursion to Iterative Transformation}
+	Let's convert recursive \textit{GCD} to an iterative version.
+	\begin{block}{Iterative Version}
+				\begin{algorithmic}[1]
+					\Procedure{iterative-gcd}{$a,b$}
+					\While{$b\neq0$}
+						\State $tmp \gets a$ \Comment {We save $a$ temporally since we need its value to update $b$}
+						\State $a\gets b$
+						\State $b \gets $ $tmp$ $mod$ $b$
+					\EndWhile
+					\State\Return{$a$}
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}	
+\end{frame}
+\begin{frame}
+	\frametitle{Tail Recursion to Iterative Transformation}
+	As you see the transformation is straightforward. There are two differences:
+	\begin{itemize}
+		\item We use $b\neq 0$ in the \textbf{while} condition since the iteration is to simulate the recursive call
+		\item We introduce the $tmp$ variable to keep the current value of $a$ which is needed to update $b$ for the next iteration.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	Now, we will transform \textit{factorial} recursive version into an iterative one.
+	\begin{block}{Recursive Version}
+				\begin{algorithmic}[1]
+					\Procedure{factorial}{$n$}
+					\If{$n=0$}
+					\State\Return{$1$}
+				\Else
+					\State\Return{$n\times$ \Call{factorial}{$n-1$}}
+				\EndIf
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	To do so, we first have to transform it to a \textit{Tail Recursion} version. We will do this by proposing a new function which for some initial values of its parameters it is the same as \textit{factorial}. In this case, we will add a new $m$ parameter. This will be an integer and it will accumulate $n\times n-1\times n-2\times \ldots$
+	\begin{block}{Recursive Version}
+			\begin{algorithmic}[1]
+				\Procedure{t-factorial}{$n,m$}
+					\State\Return{$m \times$ \Call{factorial}{$n$}}
+				\EndProcedure
+			\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	Let's \textbf{unfold} the definition of \textit{factorial(n)}
+	\begin{block}{Unfolding...}
+		\begin{algorithmic}[1]
+			\Procedure{t-factorial}{$n,m$}
+			\If{$n = 0$}
+				\State\Return{$m \times 1$}
+			\Else
+				\State\Return{$m\times n\times$\Call{factorial}{$n-1$}}
+			\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	If we take a closer look at $m \times n \times factorial(n-1)$ and we use the associative property of multiplication operation, we have this $(m\times n) \times factorial(n-1)$. Now, by the definition of $t-factorial$, 
+	\begin{equation}
+		(m\times n) \times factorial(n-1) = t-factorial(n-1,m \times n)
+	\end{equation}
+	This is called \textbf{fold}, which is the inversion of \textbf{unfold}.
+	\begin{itemize}
+		\item \textbf{fold} means replacing the expression definition by its function invocation
+		\item \textbf{unfold} means replacing the function invocation by its definition
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	We finally got a \textit{Tail Recursive} version
+	\begin{block}{Tail Recursive Version} 
+		\begin{algorithmic}[1]
+			\Procedure{t-factorial}{$n,m$}
+			\If{$n = 0$}
+				\State\Return{$m \times 1$}
+			\Else
+				\State\Return{\Call{t-factorial}{$n-1, m \times n$}}
+			\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	\begin{block}{Iterative Version of $t-factorial$}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-t-factorial}{$n,m$}
+			\While{$n \neq 0$}
+				\State $m \gets m \times n$
+				\State $n \gets n-1$
+			\EndWhile
+			\State\Return{$m$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Linear Recursion to Iterative Transformation}
+	\textit{iterative-t-factorial} is a function such that its range is larger than the range of \textit{factorial} function, but it includes \textit{factorial} range. We said at the beginning that both functions will be the same for some initial parameters value. In this case, such parameter value if $m = 1$. Thus, our \textit{iterative-factorial} is
+	\begin{block}{Iterative Version of $factorial$}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-factorial}{$n$}
+			\State\Return{\Call{iterative-t-factorial}{$n,1$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
