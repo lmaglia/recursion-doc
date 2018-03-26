@@ -346,7 +346,7 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Nested Recursion to Iterative Transformation}
-	Let's now unfold \textit{ackermann}
+	Let's now \textbf{unfold} \textit{ackermann}
 	\begin{block}{Unfolding...}
 		\begin{algorithmic}[1]
 			\tiny
@@ -382,9 +382,97 @@
 	\frametitle{Nested Recursion to Iterative Transformation}
 	Now, we will convert line number $6$ into a \textit{Tail Recursive} form without any reference to \textit{ackermann}.\\ This line looks like the line number $5$ in our \textit{t-ackermann} definition. Thus, we can \textbf{fold} it and we get this:
 	\begin{equation}
-		t-ackermann(pop(p),ackermann(top(p)-1,1)) = t-ackermann(push(top(p)-1,pop(9)),1)
+		\begin{split}
+		t-ackermann(pop(p),ackermann(top(p)-1,1)) \\ = t-ackermann(push(top(p)-1,pop(p)),1)
+		\end{split}
 	\end{equation}
 
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion To Iterative Transformation} 
+	Finally, we will convert line $11$ to a \textit{Tail Recursive} form. We will do this by \textbf{folding} the expression two times.
+	\begin{equation}
+		\begin{split}
+			t-ackermann(pop(p),ackermann(top(p)-1,ackermann(top(p),y-1))) \\ =
+			t-ackermann(push(top(p)-1,pop(p)),ackermann(top(p),y-1))\\  = 
+			t-ackermann(push(top(p),push(top(p)-1,pop(p))), y-1)
+		\end{split}
+	\end{equation}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion to Iterative Transformation}
+	Let's rewrite \textit{t-ackermann} by replacing the lines $6$ and $11$ 
+	\begin{block}{Folding...}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{t-ackermann}{$p,y$}
+				\If{$isEmpty(p)$}
+					\State\Return{$y$}
+				\Else
+					\If{$top(p) = 0$}
+						\State\Return{\Call{t-ackermann}{$pop(p),y+1$}}
+					\Else
+						\If{$y = 0$}
+							\State\Return{\Call{t-ackermann}{$push(top(p)-1,pop(p)),1$}}
+						\Else
+							\State\Return{\Call{t-ackermann}{$push(top(p),push(top(p)-1,pop(p))),y-1$}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion To Iterative Transformation}
+	It is time to write our iterative version for \textit{t-ackermann}
+	\begin{block}{Iterative $t-ackermann$}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{iterative-t-ackermann}{$p,y$}
+			\While {$\neg isEmpty(p)$}
+				\State $t \gets top(p)$
+				\State $p \gets pop(p)$
+				\If{$t = 0$}
+					\State $y\gets y+1$
+				\Else
+					\If {$y = 0$}
+						\State $y \gets 1$
+						\State $p \gets push(t-1,p) $
+					\Else
+						\State $y \gets y-1$
+						\State $p \gets push(t-1,p)$
+						\State $p \gets push(t,p)$
+					\EndIf
+				\EndIf
+			\EndWhile
+			\State\Return{$y$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Nested Recursion To Iterative Transformation}
+	Lastly, we will write out iterative \textit{ackermann}. To do so, we have to provide $t-ackermann$ with the proper initial parameters so that it computes \textit{ackermann}. If we invoke \textit{t-ackermann} with 
+	\begin{itemize}
+		\item $p = push(x, [])$
+		\item $y = y$
+	\end{itemize}
+	we will have this - by using our very first definition of $t-ackermann$
+	\begin{equation}
+		\begin{split}
+		t-ackermann(push(x,[]), y)\\ = t-ackermann([], ackermann(x,y))\\ = ackermann(x,y)
+		\end{split}
+	\end{equation}
+	Then..
+	\begin{block}{Iterative $ackerman$}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-ackermann}{$x,y$}
+				\State $p \gets push(x, [])$
+				\State\Return {\Call{iterative-t-ackermann}{p,y}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
 \end{frame}
 \section{The important things}
 
