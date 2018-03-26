@@ -465,11 +465,71 @@
 		\end{split}
 	\end{equation}
 	Then..
-	\begin{block}{Iterative $ackerman$}
+	\begin{block}{Iterative $ackermann$}
 		\begin{algorithmic}[1]
 			\Procedure{iterative-ackermann}{$x,y$}
 				\State $p \gets push(x, [])$
 				\State\Return {\Call{iterative-t-ackermann}{p,y}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	To convert our \textit{fibonacci} recursive function, we first have to find a new recursive function that calculates \textit{fibonacci} for some parameters and it is a \textit{Nested Recursive} function. Let's try this:
+	\begin{block}{Nested Version of $fibonacci$}
+		\begin{algorithmic}[1]
+			\Procedure{nested-fibonacci}{$n,m$}
+				\State\Return{$m +$ \Call{fibonacci}{n}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{unfold} \textit{fibonacci}
+	\begin{block}{Unfolding...}
+		\begin{algorithmic}[1]
+			\Procedure{nested-fibonacci}{$n,m$}
+				\If{$n = 0$}
+					\State\Return{$m+0$}
+				\Else
+					\If{$n=1$}
+						\State\Return{$m+1$}
+					\Else
+						\State\Return{$m+$\Call{fibonacci}{$n-1$}+\Call{fibonacci}{$n-2$}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	If we now associate $m + fibonacci(n-1)$ and we call it $m'$, then line $8$ looks like $m' + fibonacci(n-2)$. We ca \textbf{fold} this. 
+	\begin{equation}
+		\begin{split}
+		m' + fibonacci(n-2) = nested-fibonacci(n-2,m') \\ =
+		nested-fibonacci(n-2, m + fibonacci(n-1))
+		\end{split}
+	\end{equation}
+	We can also \textbf{fold} $m + fibonacci(n-1)$ which it is equal to $nested-fibonacci(n-1,m)$
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Tansformation}
+	\begin{block}{Folding...}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{nested-fibonacci}{$n,m$}
+				\If{$n = 0$}
+					\State\Return{$m+0$}
+				\Else
+					\If{$n=1$}
+						\State\Return{$m+1$}
+					\Else
+						\State\Return{\Call{nested-fibonacci}{$n-2$, \Call{nested-fibonacci}{$n-1,m$}}}
+					\EndIf
+				\EndIf
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
