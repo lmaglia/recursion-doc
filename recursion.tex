@@ -534,6 +534,121 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Now, it is time to convert \textit{nested-fibonacci} into \textit{tail-fibonacci}. To do so, we propouse this new function. Again, we will use a \textit{Stack} $p$
+	\begin{block}{$tail-fibonacci$}
+		\begin{algorithmic}[1]
+			\small 
+			\Procedure{tail-fibonacci}{$p,m$}
+				\If{$isEmpty(p)$}
+					\State\Return{$m$}
+				\Else
+					\State\Return{\Call{tail-fibonacci}{$pop(p)$,\Call{nested-fibonacci}{$top(p),m$}}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{unfold} \textit{nested-fibonacci}
+	\begin{block}{Unfolding...}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{tail-fibonacci}{$p,m$}
+				\If {$isEmpty(p)$}
+					\State\Return{$m$}
+				\Else
+					\If{$top(p) = 0$}
+						\State\Return{\Call{tail-fibonaci}{$pop(p), m$}}
+					\Else
+						\If{$top(p) = 1$}
+							\State\Return{\Call{tail-fibonacci}{$pop(p),m+1$}}
+						\Else
+							\State\Return{\Call{tail-fibonacci}{$pop(p)$, \Call{nested-fibonacci}{$n-2$,\Call{nested-fibonacci}{$n-1,m$}}}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	We only have to take care of line $11$. By using our \textit{tail-fibonacci} definition, we will be able to \textbf{fold} two times line $11$.
+	\begin{equation}
+		\tiny
+		\begin{split}
+			tail-fibonacci(pop(p),nested-fibonacci(n-2,nested-fibonacci(n-1,m))) \\ =
+			tail-fibonacci(push(n-2,pop(p)),nested-fibonacci(n-1,m))\\ =
+			tail-fibonacci(push(n-1,push(n-2,pop(p))),m)
+		\end{split}
+	\end{equation}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{fold} \textit{nested-fibonacci}
+	\begin{block}{Folding...}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{tail-fibonacci}{$p,m$}
+				\If {$isEmpty(p)$}
+					\State\Return{$m$}
+				\Else
+					\If{$top(p) = 0$}
+						\State\Return{\Call{tail-fibonaci}{$pop(p), m$}}
+					\Else
+						\If{$top(p) = 1$}
+							\State\Return{\Call{tail-fibonacci}{$pop(p),m+1$}}
+						\Else
+							\State\Return{\Call{tail-fibonacci}{$push(n-1,push(n-2,pop(p)))$, $m$}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	We can now convert \textit{tail-fibonacci} into an \textit{iterative} one.
+	\begin{block}{Iterative Fibonacci - 1}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-fibonacci-1}{$p,m$}
+				\While{$\neg isEmpty(p)$}
+					\State $t \gets top(p)$
+					\State $p \gets pop(p)$
+					\If{$t \neq 0$}
+					\If {$t = 1$}
+						\State $m \gets m+1$
+					\Else
+						\State $p \gets push(n-2,p)$
+						\State $p \gets push(n-1,p)$
+					\EndIf
+					\EndIf
+				\EndWhile
+				\State\Return{$m$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Our final iterative version of \textit{fibonacci} is defined by invoking \textit{iterative-fibonacci-1} with the proper arguments. Those arguments are the ones that make \textit{nested-fibonacci} return \textit{fibonacci}. Those are
+	\begin{itemize}
+		\item $p = push(n,[])$
+		\item $m = 0$
+	\end{itemize}
+	\begin{block}{Iterative Fibonacci}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-fibonacci}{$n$}
+				\State $p \gets push(n,[])$
+				\State\Return{\Call{iterative-fibonacci-1}{p,0}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
