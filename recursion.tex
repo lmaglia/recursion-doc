@@ -6,6 +6,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
+\usepackage{tikz-qtree}
 %\usepackage{algorithm2e,float}
 \MakeRobust{\Call}
 \usetheme{Boadilla}
@@ -35,6 +36,10 @@
 	the 1st. presentation 2018
 }
 \begin{document}
+\tikzset{every tree node/.style={minimum width=2em,draw,circle},
+	blank/.style={draw=none},
+	edge from parent/.style={draw,edge from parent path={(\tikzparentnode) -- (\tikzchildnode)}},
+	level distance=1.5cm}
 \begin{frame}
 	\titlepage
 \end{frame}
@@ -648,6 +653,63 @@
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	We finally got an interative version of \textit{fibonacci}, but it has two drawbacks.
+	\begin{itemize}
+		\item It's implementation is more complex than the naive iterative version we all know.
+			\begin{block}{Naive Iterative version}
+				\begin{algorithmic}[1]
+					\tiny
+					\Procedure{naive-iterative-fibonacci}{$n$}
+						\State $a \gets 0$
+						\State $b \gets 1$
+						\If {$n = 0$}
+							\State $ b \gets 0$
+						\Else				
+							\While {$n > 1$}
+								\State $tmp \gets b$
+								\State $b \gets a + b$
+								\State $a \gets temp$
+								\State $n \gets n-1$							
+							\EndWhile
+						\EndIf
+						\State \Return{$b$}
+					\EndProcedure
+				\end{algorithmic}
+			\end{block}
+		\item The running time of this version is still exponential- $\Theta(\frac{1+\sqrt(5)}{2}^n)$-, since for each number calculated, it needs to calculate all the previous numbers more than once. 
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\begin{center}
+	\begin{tikzpicture}
+		\Tree
+		[.5
+			[.4 
+				[.3 
+					[.2 
+						[.1 ]
+						[.0 ]
+					]
+					[.1 ]
+				]
+				[.2 
+					[.1 ]
+					[.0 ]
+				]
+			]
+			[.3 				
+				[.2 
+					[.1 ]
+					[.0 ]
+				]
+				[.1 ]
+			]
+		]
+	\end{tikzpicture}
+	\end{center}
 \end{frame}
 \section{The important things}
 
