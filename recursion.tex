@@ -711,6 +711,64 @@
 	\end{tikzpicture}
 	\end{center}
 \end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Can we convert \textit{fibonacci} into a \textit{tail-recursive} function which it doesn't repeat invocations?. Yes, we can!\\
+	How can we avoid recalculating values?. One way to do so is to extend the function range. The new function will return an ordered pair containing both $f(n)$ and $f(n-1)$. Thus, every time we need a previous value, it will be there.
+	\begin{block}{g-fibonacci}
+		\begin{algorithmic}[1]
+			\Procedure{g-fibonacci}{$n$}
+				\If {$n=0$}
+					\State\Return{$<0,0>$}
+				\Else
+					\State\Return{$<$\Call{fibonacci}{$n$},\Call{fibonacci}{$n-1$}$>$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{unfold} \textit{fibonacci(n)}.
+	\begin{block}{g-fibonacci}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-fibonacci}{$n$}
+				\If {$n=0$}
+					\State\Return{$<0,0>$}
+				\Else
+					\State\Return{$<$\Call{fibonacci}{$n-1$} + \Call{fibonacci}{$n-2$} ,\Call{fibonacci}{$n-1$}$>$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	We know that $g-fibonacci(n-1)$ is either
+	\begin{itemize}
+		\item $<0,0>$
+		\item $<fibonacci(n-1),fibonacci(n-2)>$
+	\end{itemize}
+	using this we can replace
+	\begin{itemize}
+		\item $fibonacci(n-1) = g-fibonacci(n-1)_0$
+		\item $fibonacci(n-2) = g-fibonacci(n-1)_1$
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{fold}
+	\begin{block}{g-fibonacci}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-fibonacci}{$n$}
+				\If {$n=0$}
+					\State\Return{$<0,0>$}
+				\Else
+					\State\Return{$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$ ,\Call{g-fibonacci}{$n-1$}$_0$$>$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}	
 \section{The important things}
 
 \begin{frame}
