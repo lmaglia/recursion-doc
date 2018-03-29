@@ -829,6 +829,110 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Now, it is time to convert this \textit{Nested Recursive} version into a \textit{Tail Recursive} one.
+	\begin{block}{Tail Recursive Version}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{ggg-fibonacci}{$p,t$}
+				\If{$isEmpty(p)$}
+					\State\Return{$t$}
+				\Else
+					\State\Return{\Call{ggg-fibonacci}{$pop(p)$, \Call{gg-fibonacci}{$top(p)_0,top(p)_1,t$}}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Let's \textbf{unfold} $gg-fibonacci$
+	\begin{block}{Tail Recursive Version}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{ggg-fibonacci}{$p,t$}
+				\If{$isEmpty(p)$}
+					\State\Return{$t$}
+				\Else
+					\If {$top(p)_1$}
+						\State\Return{\Call{ggg-fibonacci}{$pop(p),<t_0+t_1,t_0>$}}
+					\Else
+						\If {$top(p)_0 = 0$}
+							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,<0,0>$}}}
+						\Else
+							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,$,\Call{gg-fibonacci}{$top(p)_0-1,false,t$}}}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	We have to \textbf{fold} lines $9$ and $11$. Let's see line $9$ first.\\
+	Since $done = true$ and by $gg-fibonacci$ definition  $gg-fibonacci(top(p)_0,true,<0,0>) = <0+0,0> = <0,0>$. \\
+	Let's now see line $11$. We will use line number $5$ of $ggg-fibonacci$ definition to \textbf{fold}
+	\begin{equation}
+		\tiny
+		\begin{split}
+			ggg-fibonacci(pop(p),gg-fibonacci(top(p)_0,true,gg-fibonacci(top(p)_0-1,false,t))) \\=
+			ggg-fibonacci(push(<top(p)_0,true>,pop(p)), gg-fibonacci(top(p)_0-1,false,t)) \\=
+			ggg-fibonacci(push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t)
+		\end{split}
+	\end{equation}
+
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	\begin{block}{Tail Recursive Version - fold}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{ggg-fibonacci}{$p,t$}
+				\If{$isEmpty(p)$}
+					\State\Return{$t$}
+				\Else
+					\If {$top(p)_1$}
+						\State\Return{\Call{ggg-fibonacci}{$pop(p),<t_0+t_1,t_0>$}}
+					\Else
+						\If {$top(p)_0 = 0$}
+							\State\Return{\Call{ggg-fibonacci}{$pop(p),<0,0>$}}
+						\Else
+							\State\Return{\Call{ggg-fibonacci}{$push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t$}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Revisar esta parte que hay que agregar el caso n = 1 aparte. En las funciones recursivas y aca
+	\begin{block}{Iterative version}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{iterative-ggg-fibonacci}{$p,t$}
+				\While {$\neg isEmpty(p)$}
+					\State $q \gets top(p)$
+					\State $p \gets pop(p)$
+					\If {$q_1$}
+						\State $t \gets <t_0+t_1,t_0>$
+					\Else
+						\If {$q_0 = 0$}
+							\State $t \gets <0,0>$
+						\Else
+							\State $p \gets push(<q_0,true>,p)$
+							\State $p \gets push(<q_0-1,false>,p)$
+						\EndIf
+					\EndIf
+				\EndWhile
+				\State\Return{$t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
