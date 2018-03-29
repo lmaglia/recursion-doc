@@ -768,7 +768,67 @@
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
-\end{frame}	
+	This new version only depends on $g-fibonacci(n-1)$. This avoids repeating calculation. Let's try to convert it to a \textit{Nested Recursive} version
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	\begin{block}{Nested Recursive}
+		\begin{algorithmic}[1]
+			\Procedure{gg-fibonacci}{$n,done,t$}
+				\If {$done$}
+					\State\Return{$<t_0+t_1,t_0>$}
+				\Else
+					\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{g-fibonacci}{$n$}}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	\begin{block}{Unfolding $g-fibonacci$}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{gg-fibonacci}{$n,done,t$}
+				\If {$done$}
+					\State \Return{$<t_0 + t_1,t_0>$}
+				\Else
+					\If {$ n = 0$}
+						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
+					\Else
+						\State\Return{\Call{gg-fibonacci}{$n,true$,$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$,\Call{g-fibonacci}{$n-1$}$_0>$}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{equation}
+		\tiny
+		\begin{split}
+			< g-fibonacci(n-1)_0 + g-fibonacci(n-1)_1, g_fibonacci(n-1)_0 > = gg-fibonacci(n-1,true,g-fibonacci(n-1)) \\
+			gg-fibonacci(n-1,true,g-fibonacci(n-1)) = gg-fibonacci(n-1,false,t)
+		\end{split}
+	\end{equation}
+\end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	\begin{block}{Folding...}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{gg-fibonacci}{$n,done,t$}
+				\If {$done$}
+					\State \Return{$<t_0 + t_1,t_0>$}
+				\Else
+					\If {$ n = 0$}
+						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
+					\Else
+						\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{gg-fibonacci}{$n-1,false,t$}}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
