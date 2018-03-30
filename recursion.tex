@@ -721,7 +721,11 @@
 				\If {$n=0$}
 					\State\Return{$<0,0>$}
 				\Else
-					\State\Return{$<$\Call{fibonacci}{$n$},\Call{fibonacci}{$n-1$}$>$}
+					\If {$n=1$}
+						\State\Return{$<1,0>$}
+					\Else
+						\State\Return{$<$\Call{fibonacci}{$n$},\Call{fibonacci}{$n-1$}$>$}
+					\EndIf
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
@@ -737,14 +741,17 @@
 				\If {$n=0$}
 					\State\Return{$<0,0>$}
 				\Else
-					\State\Return{$<$\Call{fibonacci}{$n-1$} + \Call{fibonacci}{$n-2$} ,\Call{fibonacci}{$n-1$}$>$}
+					\If {$n=1$}
+						\State\Return{$<1,0>$}
+					\Else
+						\State\Return{$<$\Call{fibonacci}{$n-1$} + \Call{fibonacci}{$n-2$} ,\Call{fibonacci}{$n-1$}$>$}
+					\EndIf
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
-	We know that $g-fibonacci(n-1)$ is either
+	We know that for $n>1$$g-fibonacci(n-1)$ is 
 	\begin{itemize}
-		\item $<0,0>$
 		\item $<fibonacci(n-1),fibonacci(n-2)>$
 	\end{itemize}
 	using this we can replace
@@ -763,7 +770,11 @@
 				\If {$n=0$}
 					\State\Return{$<0,0>$}
 				\Else
-					\State\Return{$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$ ,\Call{g-fibonacci}{$n-1$}$_0$$>$}
+					\If {$n=1$}
+						\State\Return{$<1,0>$}
+					\Else
+						\State\Return{$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$ ,\Call{g-fibonacci}{$n-1$}$_0$$>$}
+					\EndIf
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
@@ -796,7 +807,11 @@
 					\If {$ n = 0$}
 						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
 					\Else
-						\State\Return{\Call{gg-fibonacci}{$n,true$,$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$,\Call{g-fibonacci}{$n-1$}$_0>$}}
+						\If {$n=1$}
+							\State\Return{\Call{gg-fibonacci}{$n,true,<1,0>$}}
+						\Else
+							\State\Return{\Call{gg-fibonacci}{$n,true$,$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$,\Call{g-fibonacci}{$n-1$}$_0>$}}
+						\EndIf
 					\EndIf
 				\EndIf
 			\EndProcedure
@@ -822,7 +837,11 @@
 					\If {$ n = 0$}
 						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
 					\Else
-						\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{gg-fibonacci}{$n-1,false,t$}}}
+						\If {$n=1$}
+							\State\Return{\Call{gg-fibonacci}{$n,true,<1,0>$}}
+						\Else
+							\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{gg-fibonacci}{$n-1,false,t$}}}
+						\EndIf
 					\EndIf
 				\EndIf
 			\EndProcedure
@@ -861,7 +880,11 @@
 						\If {$top(p)_0 = 0$}
 							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,<0,0>$}}}
 						\Else
-							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,$,\Call{gg-fibonacci}{$top(p)_0-1,false,t$}}}}
+							\If {$top(p)_0 = 1$}
+								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,<1,0>$}}}
+							\Else
+								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,$,\Call{gg-fibonacci}{$top(p)_0-1,false,t$}}}}
+							\EndIf
 						\EndIf
 					\EndIf
 				\EndIf
@@ -871,9 +894,13 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Multiple Recursive to Iterative Transformation}
-	We have to \textbf{fold} lines $9$ and $11$. Let's see line $9$ first.\\
-	Since $done = true$ and by $gg-fibonacci$ definition  $gg-fibonacci(top(p)_0,true,<0,0>) = <0+0,0> = <0,0>$. \\
-	Let's now see line $11$. We will use line number $5$ of $ggg-fibonacci$ definition to \textbf{fold}
+	We have to \textbf{fold} lines $9$, $12$ and $14$. Let's see line $9$ and $12$ first.\\
+	Since $done = true$ and by $gg-fibonacci$ definition  
+	\begin{itemize}
+		\item $gg-fibonacci(top(p)_0,true,<0,0>) = <0+0,0> = <0,0>$. 
+		\item $gg-fibonacci(top(p)_0,true,<1,0>) = <1+0,1> = <1,1>$. 
+	\end{itemize}
+	Let's now see line $14$. We will use line number $5$ of $ggg-fibonacci$ definition to \textbf{fold}
 	\begin{equation}
 		\tiny
 		\begin{split}
@@ -899,7 +926,12 @@
 						\If {$top(p)_0 = 0$}
 							\State\Return{\Call{ggg-fibonacci}{$pop(p),<0,0>$}}
 						\Else
-							\State\Return{\Call{ggg-fibonacci}{$push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t$}}
+							\If {$top(p) = 1$}
+
+								\State\Return{\Call{ggg-fibonacci}{$pop(p),<1,1>$}}
+							\Else
+								\State\Return{\Call{ggg-fibonacci}{$push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t$}}
+							\EndIf
 						\EndIf
 					\EndIf
 				\EndIf
@@ -909,7 +941,7 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Multiple Recursive to Iterative Transformation}
-	Revisar esta parte que hay que agregar el caso n = 1 aparte. En las funciones recursivas y aca
+	En realidad conviene reescribir todo para $<fibonacci(n+1),fibonacci(n)>$
 	\begin{block}{Iterative version}
 		\begin{algorithmic}[1]
 			\tiny
@@ -922,9 +954,14 @@
 					\Else
 						\If {$q_0 = 0$}
 							\State $t \gets <0,0>$
+
 						\Else
-							\State $p \gets push(<q_0,true>,p)$
-							\State $p \gets push(<q_0-1,false>,p)$
+							\If {$q_0 = 1$}
+								\State $t \gets <1,1>$
+							\Else
+								\State $p \gets push(<q_0,true>,p)$
+								\State $p \gets push(<q_0-1,false>,p)$
+							\EndIf
 						\EndIf
 					\EndIf
 				\EndWhile
