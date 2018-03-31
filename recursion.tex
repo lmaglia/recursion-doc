@@ -714,19 +714,12 @@
 \begin{frame}
 	\frametitle{Multiple Recursive to Iterative Transformation}
 	Can we convert \textit{fibonacci} into a \textit{tail-recursive} function which it doesn't repeat invocations?. Yes, we can!\\
-	How can we avoid recalculating values?. One way to do so is to extend the function range. The new function will return an ordered pair containing both $f(n)$ and $f(n-1)$. Thus, every time we need a previous value, it will be there.
+	How can we avoid recalculating values?. One way to do so is to extend the function range. The new function will return an ordered pair containing both $f(n+1)$ and $f(n)$. Thus, every time we need a previous value, it will be there.
 	\begin{block}{g-fibonacci}
+		\tiny
 		\begin{algorithmic}[1]
 			\Procedure{g-fibonacci}{$n$}
-				\If {$n=0$}
-					\State\Return{$<0,0>$}
-				\Else
-					\If {$n=1$}
-						\State\Return{$<1,0>$}
-					\Else
-						\State\Return{$<$\Call{fibonacci}{$n$},\Call{fibonacci}{$n-1$}$>$}
-					\EndIf
-				\EndIf
+				\State\Return{$<$\Call{fibonacci}{$n+1$},\Call{fibonacci}{$n$}$>$}
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
@@ -738,26 +731,22 @@
 		\tiny
 		\begin{algorithmic}[1]
 			\Procedure{g-fibonacci}{$n$}
-				\If {$n=0$}
-					\State\Return{$<0,0>$}
+				\If {$n+1=1$}
+					\State\Return{$<1,0>$}
 				\Else
-					\If {$n=1$}
-						\State\Return{$<1,0>$}
-					\Else
-						\State\Return{$<$\Call{fibonacci}{$n-1$} + \Call{fibonacci}{$n-2$} ,\Call{fibonacci}{$n-1$}$>$}
-					\EndIf
+					\State\Return{$<$\Call{fibonacci}{$n$} + \Call{fibonacci}{$n-1$} ,\Call{fibonacci}{$n$}$>$}
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
-	We know that for $n>1$$g-fibonacci(n-1)$ is 
+	We know that for $n \geq 1$ $g-fibonacci(n-1)$ is 
 	\begin{itemize}
-		\item $<fibonacci(n-1),fibonacci(n-2)>$
+		\item $<fibonacci(n),fibonacci(n-1)>$
 	\end{itemize}
 	using this we can replace
 	\begin{itemize}
-		\item $fibonacci(n-1) = g-fibonacci(n-1)_0$
-		\item $fibonacci(n-2) = g-fibonacci(n-1)_1$
+		\item $fibonacci(n) = g-fibonacci(n-1)_0$
+		\item $fibonacci(n-1) = g-fibonacci(n-1)_1$
 	\end{itemize}
 \end{frame}
 \begin{frame}
@@ -767,14 +756,10 @@
 		\tiny
 		\begin{algorithmic}[1]
 			\Procedure{g-fibonacci}{$n$}
-				\If {$n=0$}
-					\State\Return{$<0,0>$}
+				\If {$n+1=1$}
+					\State\Return{$<1,0>$}
 				\Else
-					\If {$n=1$}
-						\State\Return{$<1,0>$}
-					\Else
 						\State\Return{$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$ ,\Call{g-fibonacci}{$n-1$}$_0$$>$}
-					\EndIf
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
@@ -785,11 +770,15 @@
 	\frametitle{Multiple Recursive to Iterative Transformation}
 	\begin{block}{Nested Recursive}
 		\begin{algorithmic}[1]
-			\Procedure{gg-fibonacci}{$n,done,t$}
-				\If {$done$}
-					\State\Return{$<t_0+t_1,t_0>$}
+			\Procedure{gg-fibonacci}{$n,action,t$}
+				\If {$action = done$}
+					\State\Return {$t$}
 				\Else
-					\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{g-fibonacci}{$n$}}}
+					\If {$action = build$}
+						\State\Return{\Call{gg-fibonacci}{$n,done,<t_0+t_1,t_0>$}}
+					\Else
+						\State\Return{\Call{gg-fibonacci}{$n,done$,\Call{g-fibonacci}{$n$}}}
+					\EndIf
 				\EndIf
 			\EndProcedure
 		\end{algorithmic}
@@ -800,17 +789,17 @@
 	\begin{block}{Unfolding $g-fibonacci$}
 		\begin{algorithmic}[1]
 			\tiny
-			\Procedure{gg-fibonacci}{$n,done,t$}
-				\If {$done$}
-					\State \Return{$<t_0 + t_1,t_0>$}
+			\Procedure{gg-fibonacci}{$n,action,t$}
+				\If {$action = done$}
+					\State \Return{$t$}
 				\Else
-					\If {$ n = 0$}
-						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
+					\If {$action = build$}
+						\State\Return{\Call{gg-fibonacci}{$n,done,<t_0+t_1,t_0>$}}
 					\Else
-						\If {$n=1$}
-							\State\Return{\Call{gg-fibonacci}{$n,true,<1,0>$}}
+						\If {$ n+1 = 1$}
+							\State\Return{\Call{gg-fibonacci}{$n,done,<1,0>$}}
 						\Else
-							\State\Return{\Call{gg-fibonacci}{$n,true$,$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$,\Call{g-fibonacci}{$n-1$}$_0>$}}
+							\State\Return{\Call{gg-fibonacci}{$n,done$,$<$\Call{g-fibonacci}{$n-1$}$_0$ + \Call{g-fibonacci}{$n-1$}$_1$,\Call{g-fibonacci}{$n-1$}$_0>$}}
 						\EndIf
 					\EndIf
 				\EndIf
@@ -820,8 +809,9 @@
 	\begin{equation}
 		\tiny
 		\begin{split}
-			< g-fibonacci(n-1)_0 + g-fibonacci(n-1)_1, g_fibonacci(n-1)_0 > = gg-fibonacci(n-1,true,g-fibonacci(n-1)) \\
-			gg-fibonacci(n-1,true,g-fibonacci(n-1)) = gg-fibonacci(n-1,false,t)
+			gg-fibonacci(n,done,<g-fibonacci(n-1)_0 + g-fibonacci(n-1)_1,g-fibonacci(n-1)_0>)\\=
+			gg-fibonacci(n,build,g-fibonacci(n-1)) \\=
+			gg-fibonacci(n,build,gg-fibonacci(n-1,process,t))
 		\end{split}
 	\end{equation}
 \end{frame}
@@ -830,17 +820,17 @@
 	\begin{block}{Folding...}
 		\begin{algorithmic}[1]
 			\tiny
-			\Procedure{gg-fibonacci}{$n,done,t$}
-				\If {$done$}
-					\State \Return{$<t_0 + t_1,t_0>$}
+			\Procedure{gg-fibonacci}{$n,action,t$}
+				\If {$action = done$}
+					\State \Return{$t$}
 				\Else
-					\If {$ n = 0$}
-						\State\Return{\Call{gg-fibonacci}{$n,true,<0,0>$}}
+					\If {$action = build$}
+						\State\Return{\Call{gg-fibonacci}{$n,done,<t_0+t_1,t_0>$}}
 					\Else
-						\If {$n=1$}
-							\State\Return{\Call{gg-fibonacci}{$n,true,<1,0>$}}
+						\If {$ n+1 = 1$}
+							\State\Return{\Call{gg-fibonacci}{$n,done,<1,0>$}}
 						\Else
-							\State\Return{\Call{gg-fibonacci}{$n,true$,\Call{gg-fibonacci}{$n-1,false,t$}}}
+							\State\Return{\Call{gg-fibonacci}{$n,build$,\Call{gg-fibonacci}{$n-1,process,t$}}}
 						\EndIf
 					\EndIf
 				\EndIf
@@ -874,16 +864,16 @@
 				\If{$isEmpty(p)$}
 					\State\Return{$t$}
 				\Else
-					\If {$top(p)_1$}
-						\State\Return{\Call{ggg-fibonacci}{$pop(p),<t_0+t_1,t_0>$}}
+					\If {$top(p)_1 = done$}
+						\State\Return{\Call{ggg-fibonacci}{$pop(p),t$}}
 					\Else
-						\If {$top(p)_0 = 0$}
-							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,<0,0>$}}}
+						\If {$top(p)_1 = build$}
+							\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,done,<t_0+t_1,t_0>$}}}
 						\Else
-							\If {$top(p)_0 = 1$}
-								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,<1,0>$}}}
+							\If {$top(p)_0 + 1 = 1$}
+								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,done,<1,0>$}}}
 							\Else
-								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,true,$,\Call{gg-fibonacci}{$top(p)_0-1,false,t$}}}}
+								\State\Return{\Call{ggg-fibonacci}{$pop(p)$,\Call{gg-fibonacci}{$top(p)_0,build,$,\Call{gg-fibonacci}{$top(p)_0-1,process,t$}}}}
 							\EndIf
 						\EndIf
 					\EndIf
@@ -897,16 +887,16 @@
 	We have to \textbf{fold} lines $9$, $12$ and $14$. Let's see line $9$ and $12$ first.\\
 	Since $done = true$ and by $gg-fibonacci$ definition  
 	\begin{itemize}
-		\item $gg-fibonacci(top(p)_0,true,<0,0>) = <0+0,0> = <0,0>$. 
-		\item $gg-fibonacci(top(p)_0,true,<1,0>) = <1+0,1> = <1,1>$. 
+		\item $gg-fibonacci(top(p)_0,done,<t_0+t_1,t_0>) = <t_0+t_1,t_0>$. 
+		\item $gg-fibonacci(top(p)_0,done,<1,0>) = <1,0>$. 
 	\end{itemize}
 	Let's now see line $14$. We will use line number $5$ of $ggg-fibonacci$ definition to \textbf{fold}
 	\begin{equation}
 		\tiny
 		\begin{split}
-			ggg-fibonacci(pop(p),gg-fibonacci(top(p)_0,true,gg-fibonacci(top(p)_0-1,false,t))) \\=
-			ggg-fibonacci(push(<top(p)_0,true>,pop(p)), gg-fibonacci(top(p)_0-1,false,t)) \\=
-			ggg-fibonacci(push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t)
+			ggg-fibonacci(pop(p),gg-fibonacci(top(p)_0,build,gg-fibonacci(top(p)_0-1,process,t))) \\=
+			ggg-fibonacci(push(<top(p)_0,build>,pop(p)), gg-fibonacci(top(p)_0-1,process,t)) \\=
+			ggg-fibonacci(push(<top(p)_0-1,process>,push(<top(p)_0,build>,pop(p))),t)
 		\end{split}
 	\end{equation}
 
@@ -920,17 +910,17 @@
 				\If{$isEmpty(p)$}
 					\State\Return{$t$}
 				\Else
-					\If {$top(p)_1$}
-						\State\Return{\Call{ggg-fibonacci}{$pop(p),<t_0+t_1,t_0>$}}
+					\If {$top(p)_1 = done$}
+						\State\Return{\Call{ggg-fibonacci}{$pop(p),t$}}
 					\Else
-						\If {$top(p)_0 = 0$}
-							\State\Return{\Call{ggg-fibonacci}{$pop(p),<0,0>$}}
+						\If {$top(p)_1 = build$}
+							\State\Return{\Call{ggg-fibonacci}{$pop(p),<t_0+t_1,t_0>$}}
 						\Else
-							\If {$top(p) = 1$}
+							\If {$top(p)_0+1 = 1$}
 
-								\State\Return{\Call{ggg-fibonacci}{$pop(p),<1,1>$}}
+								\State\Return{\Call{ggg-fibonacci}{$pop(p),<1,0>$}}
 							\Else
-								\State\Return{\Call{ggg-fibonacci}{$push(<top(p)_0-1,false>,push(<top(p)_0,true>,pop(p))),t$}}
+								\State\Return{\Call{ggg-fibonacci}{$push(<top(p)_0-1,process>,push(<top(p)_0,build>,pop(p))),t$}}
 							\EndIf
 						\EndIf
 					\EndIf
@@ -941,7 +931,6 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Multiple Recursive to Iterative Transformation}
-	En realidad conviene reescribir todo para $<fibonacci(n+1),fibonacci(n)>$
 	\begin{block}{Iterative version}
 		\begin{algorithmic}[1]
 			\tiny
@@ -949,20 +938,18 @@
 				\While {$\neg isEmpty(p)$}
 					\State $q \gets top(p)$
 					\State $p \gets pop(p)$
-					\If {$q_1$}
+					\If {$q_1 \neq done$}
+					\If {$q_1 = build$}
 						\State $t \gets <t_0+t_1,t_0>$
 					\Else
-						\If {$q_0 = 0$}
-							\State $t \gets <0,0>$
+						\If {$q_0 +1 = 1$}
+							\State $t \gets <1,0>$
 
 						\Else
-							\If {$q_0 = 1$}
-								\State $t \gets <1,1>$
-							\Else
-								\State $p \gets push(<q_0,true>,p)$
-								\State $p \gets push(<q_0-1,false>,p)$
-							\EndIf
+							\State $p \gets push(<q_0,build>,p)$
+							\State $p \gets push(<q_0-1,process>,p)$
 						\EndIf
+					\EndIf
 					\EndIf
 				\EndWhile
 				\State\Return{$t$}
