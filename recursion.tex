@@ -957,6 +957,18 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Multiple Recursive to Iterative Transformation}
+	Finally, \textit{fibonacci} is implemented this way:
+	\begin{block}{Fibonacci}
+		\begin{algorithmic}[1]
+			\Procedure{fibonacci}{$n$}
+				\State $p \gets push(<n,process>,[])$
+				\State \Return{\Call{iterative-ggg-fibonacci}{$p,<0,0>$}$_1$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
