@@ -969,6 +969,221 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{Copy a Binary tree}
+		\begin{algorithmic}[1]
+			\Procedure{copy}{$bt$}
+				\If {$isNil(bt)$}
+					\State \Return{$nil$}
+				\Else
+					\State \Return{$bin($\Call{copy}{$left(bt)$},$root(bt)$,\Call{copy}{$right(bt)$}$)$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	First of all, all the trees that the stack contains are not $nil$
+	\begin{block}{Copy a Binary Tree - First Rewritting}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-copy}{$a, s$}
+				\If {$isEmpty(s)$}
+					\State \Return{$a$}
+				\Else
+					\If{$\neg top(s)_2$}
+						\State\Return{\Call{g-copy}{\Call{copy}{$right(top(s)_0)},push(<top(s)_0,a,true>,pop(s))$}}
+					\Else
+						\State\Return{\Call{g-copy}{$bin(top(s)_1,root(top(s)_0),a), pop(s)$}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	Precondition : $valid = true$ then $a = nil$
+	\begin{block}{Copy a binary tree - second rewritting}
+		\begin{algorithmic}[1]
+			\Procedure{gg-copy}{$a, t, valid, s$}
+				\If {$\neg valid$}
+					\State \Return{\Call{g-copy}{\Call{copy}{$a$},$s$}}
+				\Else
+					\State \Return{\Call{g-copy}{$t,s$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	Let's \textbf{unfold} line number $3$
+	\begin{algorithmic}[1]
+		\If {$isNil(a)$}
+			\State\Return{\Call{g-copy}{$nil, s$}}
+		\Else
+			\State\Return{\Call{g-copy}{$bin($\Call{copy}{$left(a)$}, $root(a)$, \Call{copy}{right(a)} $),s$}}
+		\EndIf
+	\end{algorithmic}
+	The line number $2$ is equal to $gg-copy(a,nil, true, s)$. So, we get ths:
+	\begin{algorithmic}[1]
+		\If {$isNil(a)$}
+			\State\Return{\Call{gg-copy}{$a,nil,true,s$}}
+		\Else
+			\State\Return{\Call{g-copy}{$bin($\Call{copy}{$left(a)$}, $root(a)$, \Call{copy}{right(a)} $),s$}}
+		\EndIf
+	\end{algorithmic}
+	
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	Line number $4$ looks like line number $8$ in $g-copy$ definition. We will get to that definition if
+	\begin{itemize}
+		\item the fist parameter of $g-copy$ must be $copy(right(a))$
+		\item $top(s)$ must be $<a, copy(left(a)),true>$
+	\end{itemize}
+	Thus, we get this
+	\begin{algorithmic}[1]
+		\small
+		\If {$isNil(a)$}
+			\State\Return{\Call{gg-copy}{$a,nil,true,s$}}
+		\Else
+			\State\Return{\Call{g-copy}{\Call{copy}{$right(a)$} $,push(<a,$ \Call{copy}{$left(a)$} $,true>,s)$}}
+		\EndIf
+	\end{algorithmic}
+	We have to get rid of the $copy$ in the $push$, and line $4$ looks like $g-copy$ line number $6$. Using such definition... 
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{algorithmic}[1]
+		\small
+		\If {$isNil(a)$}
+			\State\Return{\Call{gg-copy}{$a,nil,true,s$}}
+		\Else
+			\State\Return{\Call{g-copy}{\Call{copy}{$left(a)$} $,push(<a,\perp ,false>,s)$}}
+		\EndIf
+	\end{algorithmic}
+Using $gg-copy$ line number $3$, te line number $4$ becomes	
+	\begin{algorithmic}[1]
+		\small
+		\If {$isNil(a)$}
+			\State\Return{\Call{gg-copy}{$a,nil,true,s$}}
+		\Else
+			\State\Return{\Call{gg-copy}{$left(a),t,false,push(<a,\perp ,false>,s)$}}
+		\EndIf
+	\end{algorithmic}
+	Now, it's time to \textbf{unfold} $gg-copy$ line number $5$, that is $g-copy(t,s)$
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{algorithmic}[1]
+		\tiny
+		\If {$isEmpty(s)$}
+			\State \Return{$t$}
+		\Else
+			\If{$\neg top(s)_2$}
+				\State\Return{\Call{g-copy}{\Call{copy}{$right(top(s)_0)},push(<top(s)_0,t,true>,pop(s))$}}
+			\Else
+				\State\Return{\Call{g-copy}{$bin(top(s)_1,root(top(s)_0),t), pop(s)$}}
+			\EndIf
+		\EndIf
+	\end{algorithmic}
+	Let's \textbf{fold} line number $5$ 
+	\begin{algorithmic}[1]
+		\tiny
+		\If {$isEmpty(s)$}
+			\State \Return{$t$}
+		\Else
+			\If{$\neg top(s)_2$}
+				\State\Return{\Call{gg-copy}{$right(top(s)_0),\perp,false,push(<top(s)_0,t,true>,pop(s))$}}
+			\Else
+				\State\Return{\Call{g-copy}{$bin(top(s)_1,root(top(s)_0),t), pop(s)$}}
+			\EndIf
+		\EndIf
+	\end{algorithmic}
+	Let's \textbf{fold} line number $7$
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{algorithmic}[1]
+		\tiny
+		\If {$isEmpty(s)$}
+			\State \Return{$t$}
+		\Else
+			\If{$\neg top(s)_2$}
+				\State\Return{\Call{gg-copy}{$right(top(s)_0),\perp,false,push(<top(s)_0,t,true>,pop(s))$}}
+			\Else
+				\State\Return{\Call{gg-copy}{$nill,bin(top(s)_1,root(top(s)_0),t), true,  pop(s)$}}
+			\EndIf
+		\EndIf
+	\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{Copy a binary tee - Tail Recursive}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{gg-copy}{$a, t, valid, s$}
+				\If {$\neg valid$}
+					\If {$isNil(a)$}
+						\State\Return{\Call{gg-copy}{$a,nil,true,s$}}
+					\Else
+						\State\Return{\Call{gg-copy}{$left(a),t,false,push(<a,\perp ,false>,s)$}}
+					\EndIf
+				\Else
+					\If {$isEmpty(s)$}
+						\State \Return{$t$}
+					\Else
+						\If{$\neg top(s)_2$}
+							\State\Return{\Call{gg-copy}{$right(top(s)_0),\perp,false,push(<top(s)_0,t,true>,pop(s))$}}
+						\Else
+							\State\Return{\Call{gg-copy}{$nil,bin(top(s)_1,root(top(s)_0),t), true,  pop(s)$}}
+						\EndIf
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Someother examples}
+	\begin{block}{Iterative Binary Treee Copy}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{iterative-gg-copy}{$a,t,valid,s$}
+				\While {$\neg valid$ $or$ $\neg isEmpty(s)$}
+					\If {$\neg valid$}
+						\If {$isNil(a)$}
+							\State $t \gets nil$
+							\State $valid \gets true$
+						\Else
+							\State $s \gets push(<a, \perp,false>,s)$
+							\State $a \gets left(a)$
+						\EndIf
+					\Else
+						\If {$\neg isEmpty(s)$}
+							\State $x \gets top(s)$
+							\State $s \gets pop(s)$
+							\If {$\neg x_2$}
+								\State $a \gets right(x_0)$
+								\State $valid \gets false$
+								\State $s \gets push(<x_0,t,true>,s)$
+								\State $t \gets \perp$
+							\Else
+								\State $a \gets nil$
+								\State $t \gets bin(x_1,root(x_0),t)$
+							\EndIf
+						\EndIf
+					\EndIf
+				\EndWhile
+				\State\Return{$t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
