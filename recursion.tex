@@ -971,6 +971,44 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Some other examples}
+	\begin{block}{InOrder}
+		\begin{algorithmic}[1]
+			\small
+			\Procedure{inorder}{a}
+				\If {$isNil(a)$}
+					\State\Return {$[]$}
+				\Else
+					\State\Return {\Call{inorder}{$left(a)$} $++ [root(a)] ++$ \Call{inorder}{$right(a)$} $)$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{gInOrder}
+		\begin{algorithmic}[1]
+			\Procedure{g-inorder}{$a,s,t$}
+				\State \Return{$s++$\Call{inorder}{$a$}$++t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Let's \textbf{unfold} \textit{inorder}
+	\begin{block}{gInOrder}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{g-inorder}{$a,s,t$}
+				\If {$isNil(a)$}
+					\State \Return{$s++[]++t$}
+				\Else
+					\State \Return {$s++$\Call{inorder}{$left(a)$} $++[root(a)] ++$ \Call{inorder}{$right(a)$} $++t$}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
 	\begin{block}{Copy a Binary tree}
 		\begin{algorithmic}[1]
 			\Procedure{copy}{$bt$}
