@@ -1005,6 +1005,15 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Some other examples}
+	Some facts:
+	\begin{itemize}
+		\item This tuple $<a \perp, false>$ in the stack means \textit{we are calculating $a$, but we haven't known anything about its children yet}
+		\item This tuple $<a,t,true>$ in the stack means \textit{we are calculating $a$, and we have already calculated $t$, which is the copy(left(a)). We are now calculating the solution for right(a)}
+	\end{itemize}
+	$g-copy(a,s)$ can be interpreted in the following manner: $a$ is the solution for one of the children of the tree in the top of the stack $s$. If the tree in the top of $s$ is not valid, $a$ is a solution for its left child and $a$ will be stacked with it so that we can continue solving its right child. Otherwise, we have both solution and we can build the solution for the tree in th top of the stack.
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
 	Precondition : $valid = true$ then $a = nil$
 	\begin{block}{Copy a binary tree - second rewritting}
 		\begin{algorithmic}[1]
@@ -1149,8 +1158,8 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 	\end{block}
 \end{frame}
 \begin{frame}
-	\frametitle{Someother examples}
-	\begin{block}{Iterative Binary Treee Copy}
+	\frametitle{Some other examples}
+	\begin{block}{Iterative Binary Tree Copy}
 		\begin{algorithmic}[1]
 			\tiny
 			\Procedure{iterative-gg-copy}{$a,t,valid,s$}
@@ -1180,6 +1189,19 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 					\EndIf
 				\EndWhile
 				\State\Return{$t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{Iterative Binary Tree Copy}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-copy}{$a$}
+				\State $t \gets \perp$
+				\State $valid \gets false$
+				\State $ s \gets []$
+				\State \Return{\Call{iterative-gg-copy}{$a,t,valid,s$}}
 			\EndProcedure
 		\end{algorithmic}
 	\end{block}
