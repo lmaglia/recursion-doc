@@ -1009,6 +1009,46 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Some other examples}
+	This expression can be grouped by using the associative property this way:
+	\begin{algorithmic}[1]
+		\State  $(s++$ \Call{inorder}{$left(a)$}$)++([root(a)]++$\Call{inorder}{right(a)}$++t)$
+	\end{algorithmic}
+	which is equal to
+	\begin{algorithmic}[1]
+		\State  $(s++$ \Call{inorder}{$left(a)$}$)++(\Call{g-inorder}{$right(a),[root(a)], t$})$
+	\end{algorithmic}
+	\begin{algorithmic}[1]
+		\State  \Call{g-inorder}{$left(a),s,$ \Call{g-inorder}{$right(a),[root(a)], t$}}
+	\end{algorithmic}
+	\begin{block}{gInOrder}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{g-inorder}{$a,s,t$}
+				\If {$isNil(a)$}
+					\State \Return{$s++[]++t$}
+				\Else
+					\State  \Return {\Call{g-inorder}{$left(a),s,$ \Call{g-inorder}{$right(a),[root(a)], t$}}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{ggInorder}
+		\begin{algorithmic}[1]
+			\Procedure{gg-inorder}{$p,t$}
+				\If {$isEmpty(p)$}
+					\State \Return{$t$}
+				\Else
+					\State \Return \Call{gg-inorder}{$pop(p),$\Call{g-inorder}{$top(p)_0,top(p)_1, t$} }
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
 	\begin{block}{Copy a Binary tree}
 		\begin{algorithmic}[1]
 			\Procedure{copy}{$bt$}
