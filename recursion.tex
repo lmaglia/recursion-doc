@@ -1049,6 +1049,94 @@
 \end{frame}
 \begin{frame}
 	\frametitle{Some other examples}
+	\begin{block}{ggInorder - unfolding gInorder}
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{gg-inorder}{$p,t$}
+				\If {$isEmpty(p)$}
+					\State \Return{$t$}
+				\Else
+					\If {$isNil(top(p)_0)$}
+						\State \Return \Call{gg-inorder}{$pop(p), top(p)_1++[]++t$}
+					\Else
+						\State \Return \Call{gg-inorder}{$pop(p),$\Call{g-inorder}{$left(top(p)_0),top(p)_1,$\Call{g-inorder}{$right(top(p)_0), [root(top(p)_0)],t$} } }
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	We only have \textbf{fold} line number $8$. We will do this in two \textbf{folds}
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return{\Call{gg-inorder}{$push(<left(top(p)_0),top(p)_1>,pop(p)),$\Call{g-inorder}{$right(top(p)_0, [root(top(p)_0)]),t$}}}
+	\end{algorithmic}
+	and the second one is 
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return{\Call{gg-inorder}{$push(<right(top(p)_0),[root(top(p)_0)]>,push(<left(top(p)_0),top(p)_1>,pop(p))),t$}}
+	\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Some othe examples}
+	\begin{block}{ggInorder - folding }
+		\begin{algorithmic}[1]
+			\tiny
+			\Procedure{gg-inorder}{$p,t$}
+				\If {$isEmpty(p)$}
+					\State \Return{$t$}
+				\Else
+					\If {$isNil(top(p)_0)$}
+						\State \Return \Call{gg-inorder}{$pop(p), top(p)_1++[]++t$}
+					\Else
+						\State \Return{\Call{gg-inorder}{$push(<right(top(p)_0),[root(top(p)_0)]>,push(<left(top(p)_0),top(p)_1>,pop(p))),t$}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{Iterative gg-inorder}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-gg-inorder}{$p,t$}
+				\While {$\neg isEmpty(p)$}
+					\State $r \gets top(p)$
+					\State $p \gets pop(p)$
+					\If {$isNill(r_0)$}
+						\State $t \gets r_1 ++ [] ++ t$
+					\Else
+						\State $p \gets push(<left(r_0),r_1>,p)$
+						\State $p \gets push(<right(r_0),[root(r_0)]>,p)$
+					\EndIf
+				\EndWhile
+				\State \Return {$t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
+	\begin{block}{interative-g-inorder}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-g-inorder}{$a,s,t$}
+				\State \Return{\Call{iterative-gg-inorder}{$push(<a,s>,[]),t$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{interative-inorder}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-inorder}{$a$}
+				\State \Return{\Call{iterative-g-inorder}{$a,[],[]$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Some other examples}
 	\begin{block}{Copy a Binary tree}
 		\begin{algorithmic}[1]
 			\Procedure{copy}{$bt$}
