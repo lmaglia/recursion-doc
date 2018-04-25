@@ -1372,6 +1372,77 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Copy a N-Ary Tree}
+	\begin{block}{Copy a N-Ary Tree}
+		\begin{algorithmic}[1]
+			\Procedure{copy}{$a$}
+				\State \Return{$tree(root(a), copyChildren(children(a)))$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Where
+	\begin{block}{Copy Children}
+		\begin{algorithmic}[1]
+			\Procedure{copyChildren}{$s$}
+				\If {$isEmpty(s)$}
+					\State \Return{$[]$}
+				\Else
+					\State \Return{\Call{copy}{$first(s)$} $+$ \Call{copyChildren}{$tail(s)$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N-Ary Tree}
+	\begin{block}{Tail $copyChildren$}
+		\begin{algorithmic}[1]
+			\Procedure{g-CopyChildren}{$s,t$}
+				\State \Return{$t \&$ \Call{copyChildren}{$s$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{\textbf{Unfold} $copyChildren$}
+		\begin{algorithmic}[1]
+			\Procedure{g-CopyChildren}{$s,t$}
+				\If {$isEmpty(s)$}
+					\State \Return{$t \& []$}
+				\Else
+					\State \Return{$t \& $ \Call{copy}{$first(s)$} $+$ \Call{copyChildren}{$tail(s)$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N-Ary Tree}
+	\begin{block}{\textbf{Unfold} $copyChildren$}
+		\small
+		\begin{algorithmic}[1]
+			\Procedure{g-CopyChildren}{$s,t$}
+				\If {$isEmpty(s)$}
+					\State \Return{$t \& []$}
+				\Else
+					\State \Return{$(t + $ \Call{copy}{$first(s)$} $)\&$ \Call{copyChildren}{$tail(s)$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{\textbf{Fold} $g-CopyChildren$}
+		\small
+		\begin{algorithmic}[1]
+			\Procedure{g-CopyChildren}{$s,t$}
+				\If {$isEmpty(s)$}
+					\State \Return{$t \& []$}
+				\Else
+					\State \Return{\Call{g-copyChildren}{$tail(s),t+$ \Call{copy}{$first(s)$}}} 
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
