@@ -1443,6 +1443,66 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Copy N-Ary Tree}
+	\begin{block}{gCopy}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-copy}{$a, p$}
+				\If {$isEmpty(p)$}
+					\State \Return{$a$}
+				\Else
+					\If {$isEmpty(top(p)_1)$}
+						\If {$isNull(a)$}
+							\State \Return{\Call{g-copy}{$tree(root(top(p)_0), top(p)_2),pop(p))$}}
+						\Else
+							\State \Return{\Call{g-copy}{$tree(root(top(p)_0),top(p)_2 + a),pop(p)$}}
+						\EndIf
+					\Else
+						\State \Return{\Call{g-copy}{\Call{copy}{$first(top(p)_1)$}$, push(<top(p)_0, tail(top(p)_1), top(p)_2 + a>,pop(p))$}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N-Ary Tree}
+	\begin{block}{gg-copy}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{gg-copy}{$a,t,valid,p$}
+				\If {$\neg valid$} 
+					\State \Return{\Call{g-copy}{\Call{copy}{$a$}$,p$}}
+				\Else
+					\State \Return{\Call{g-copy}{$t,p$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Let's \textbf{unfold} line number 3
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Call{g-copy}{\Call{copy}{$a$} $, p$} $=$ \Call{g-copy}{$tree(root(a),$\Call{copyChildren}{$children(a)$} $),p$}
+	\end{algorithmic}
+	By using $g-copy$ line number $7$, we can \textbf{fold} it in this manner
+	\begin{algorithmic}[1]
+		\tiny
+		\State  \Call{g-copy}{$tree(root(a),$\Call{copyChildren}{$children(a)$} $),p$} $=$ \Call{g-copy}{$null, push(<a, [],$\Call{copyChildren}{$children(a)$} $>,p)$}
+	\end{algorithmic}
+	Let's \textbf{unfold} $copyChildren$
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N-Ary Tree}
+	 \begin{algorithmic}[1]
+		 \tiny
+		 \If {$isEmpty(children(a))$}
+		 	\State \Call{g-copy}{$null, push(<a, [],[]>,p)$}
+		 \Else
+			\State \Call{g-copy}{$null,push(<a,[],$\Call{copy}{$first(children(a))$} $+$ \Call{copyChildren}{$tail(children(a))$}$>,p)$}
+		 \EndIf
+	 \end{algorithmic}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
