@@ -1637,6 +1637,277 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\begin{frame}
+	\frametitle{Permutations}
+	\begin{block}{Printing Permutations of an array}
+		\tiny
+		\begin{algorithmic}[1]
+			 \Procedure{permutations}{$a,i,n$}
+			 	\If {$i \geq n$}
+					\State \Return {$[a]$}
+				\Else
+					\State \Return {\Call{permute}{$a,i,i,n$}}
+				\EndIf
+			 \EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{Permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{permute}{$a,i,j,n$}
+				\If {$j \geq n$}
+					\State \Return{$[]$}
+				\Else
+					\State \Return{\Call{permutations}{$swap(a,i,j), i+1,n$} $+$\Call{permute}{$a,i,j+1,n$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations}
+	Let's propouse these two:
+	\begin{block}{g-permutations}
+		\begin{algorithmic}[1]
+			\Procedure{g-permutations}{$a,i,n,s$}
+				\State \Return{ $s + $ \Call{permutations}{$a,i,n$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{g-permute}
+		\begin{algorithmic}[1]
+			\Procedure{g-permute}{$a,i,j,n,s$}
+				\State \Return {$s +$ \Call{permute}{$a,i,j,n$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations}
+	Let's \textbf{unfold} $permutations$ in $g-permutations$
+	\begin{block}{Unfolding permutations}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-permutations}{$a,i,n,s$}
+				\If {$ i \geq n$}
+					\State \Return {$s+ [a]$}
+				\Else
+					\State \Return {$s + $ \Call{permute}{$a,i,i,n$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Line number $5$ is the difinition of $g-permute$, then...
+	\begin{block}{Folding line 5}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-permutations}{$a,i,n,s$}
+				\If {$ i \geq n$}
+					\State \Return {$s+ [a]$}
+				\Else
+					\State \Return { \Call{g-permute}{$a,i,i,n,s$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of and array}
+	Let's \textbf{unfold} $permute$ in $g-permute$
+	\begin{block}{Unfolding permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-permute}{$a,i,j,n,s$}
+				\If {$ j \geq n$}
+					\State \Return {$s + []$}					
+				\Else
+					\State \Return {$s + $ \Call{permutations}{$swap(a,i,j),i+1,n$} + \Call{permute}{$a,i,j+1,n$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Now, we have to \textbf{fold} line number $5$. The first thing we see is that the first two concatenations can be replaced by $g-permutations$
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return {\Call{g-permutations}{$swap(a,i,j),i+1,n,s$} $+$ \Call{permute}{$a,i,j+1$}}
+	\end{algorithmic}
+	Now, let's \textbf{unfold} $g-permutations$ in the new line
+	\begin{algorithmic}[1]
+		\tiny
+		\If { $i+1 \geq n$}
+			\State \Return {$s + [swap(a,i,j)] + $ \Call{permute}{$a,i,j+1,n$}}
+		\Else
+			\State \Return {\Call{g-permute}{$swap(a,i,j),i+1,i+1,n,s$} $+$ \Call{permute}{$a,i,j+1,n$}}
+		\EndIf
+	\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	Let's \textbf{fold} everything
+	\begin{algorithmic}[1]
+		\tiny
+		\If { $i+1 \geq n$}
+			\State \Return { \Call{g-permute}{$a,i,j+1,n,s + [swap(a,i,j)]$}}
+		\Else
+			\State \Return {\Call{g-permute}{$a,i,j+1,n,$\Call{g-permute}{$swap(a,i,j),i+1,i+1,n,s$}}}
+		\EndIf
+	\end{algorithmic}
+	\begin{block}{Folding permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-permute}{$a,i,j,n,s$}
+				\If {$ j \geq n$}
+					\State \Return {$s + []$}					
+				\Else
+					\If { $i+1 \geq n$}
+						\State \Return { \Call{g-permute}{$a,i,j+1,n,s + [swap(a,i,j)]$}}
+					\Else
+						\State \Return {\Call{g-permute}{$a,i,j+1,n,$\Call{g-permute}{$swap(a,i,j),i+1,i+1,n,s$}}}
+					\EndIf
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	We now have a \textit{Nested} version of $g-copy$. Let's convert it into a \textit{tail} version
+	\begin{block}{tail recursive gg-permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{gg-permute}{$s,n,p$}
+				\If {$isEmpty(p)$}
+					\State \Return {$s$}
+				\Else
+					\State \Return {\Call{gg-permute}{\Call{g-permute}{$top(p)_0,top(p_1),top(p)_2,n,s$}$,n,pop(p)$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	Let's \textbf{unfold} $g-permute$ in line number $5$ 
+	\begin{algorithmic}[1]
+		\tiny
+		\If {$top(p)_2 \geq n$}
+			\State \Return {\Call{gg-permute}{$s+[]$,n,pop(p)}}
+		\Else
+			\If {$top(p)_1 + 1 \geq n$}
+				\State \Return{\Call{gg-permute}{\Call{g-permute}{$top(p)_0, top(p)_1, top(p)_2+1,n, s+ [swap(top(p)_0,top(p)_1,top(p)_2)]  $}$,n,pop(p)$}}
+			\Else
+				\State \Return {\Call{gg-permute}{\Call{g-permute}{$top(p)_0,top(p)_1,top(p)_2+1,n$,\Call{g-permute}{$swap(top(p)_0,top(p)_1,top(p)_2), top(p)_1+1,top(p)_1+1,n,s$}}$,n,pop(p)$}}
+			\EndIf
+		\EndIf
+	\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	Let's \textbf{fold} line number $5$ by using $gg-permute$ line $5$ definition
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return {\Call{gg-permute}{$s + [swap(top(p)_0,top(p)_1,top(p)_2)],n,push(<top(p)_0,top(p)_1,top(p)_2+1>,pop(p))$}}
+	\end{algorithmic}
+	Line number $7$ is \textbf{folded} in two steps in the same way.
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return {\Call{gg-permute}{\Call{g-permute}{$swap(top(p)_0,top(p)_1,top(p)_2),top(p)_1+1,top(p)_1+1,n,s$}$, n, push(<top(p)_0,top(p)_1,top(p)_2+1>,pop(p))$}}
+	\end{algorithmic}
+	An the second step
+	\begin{algorithmic}[1]
+		\tiny
+		\State \Return{\Call{gg-permute}{$s,n, push(<swap(top(p)_0,top(p)_1,top(p)_2), top(p)_1+1,top(p)_1+1>,push(<top(p)_0,top(p)_1,top(p)_2+1>,pop(p)))$}}
+	\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	\begin{block}{gg-permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{gg-permute}{$s,n,p$}
+				\If {$isEmpty(p)$}
+					\State \Return {$s$}
+				\Else
+					\If {$top(p)_2 \geq n$}
+						\State \Return {\Call{gg-permute}{$s+[]$,n,pop(p)}}
+					\Else
+						\If {$top(p)_1 + 1 \geq n$}
+							\State \Return {\Call{gg-permute}{$s + [swap(top(p)_0,top(p)_1,top(p)_2)],n,push(<top(p)_0,top(p)_1,top(p)_2+1>,pop(p))$}}
+						\Else
+							\State \Return{\Call{gg-permute}{$s,n, push(<swap(top(p)_0,top(p)_1,top(p)_2), top(p)_1+1,top(p)_1+1>,push(<top(p)_0,top(p)_1,top(p)_2+1>,pop(p)))$}}
+						\EndIf
+					\EndIf
+					
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutatons of an array}
+	\begin{block}{Iterative - gg-permute}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{iterative-gg-permute}{$s,n,p$}
+				\While {$\neg isEmpty(p)$}
+					\State $t \gets top(p)$
+					\State $p \gets pop(p)$
+					\If {$t_2 < n$}
+						\If {$t_1 +1 \geq n$}
+							\State $s \gets s + [swap(t_0,t_1,t_2)]$
+							\State $p \gets push(<t_0,t_1,t_2+1>,p)$
+						\Else
+							\State $p \gets push(<t_0,t_1,t_2+1>,p)$
+							\State $p \gets push(<swap(t_0,t_1,t_2), t_1+1,t_1+1>,p)$
+						\EndIf
+					\EndIf
+				\EndWhile
+				\State \Return{$s$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	\begin{itemize}
+		\item $g-permute(a,i,j,n,s) = gg-permute(s,n,push(<a,i,j>,[]))$
+		\item $permute(a,i,j,n) = g-permute(a,i,j,n,[]) = gg-permute([],n push(<a,i,j>,[]))$
+		\item $permutations(a,i,n) = g-permutations(a,i,n,[])$
+	\end{itemize}
+	Then..
+	\begin{block}{g-permutations is}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{g-permutations}{$a,i,n,s$}
+				\If {$ i \geq n$}
+					\State \Return {$s+ [a]$}
+				\Else
+					\State \Return { \Call{gg-permute}{$s,n,push(<a,i,i,>, [])$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Permutations of an array}
+	\begin{block}{Iteratve gg-permutations}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{iterative-gg-permutations}{$a,i,n,s$}
+				\If {$ i \geq n$}
+					\State \Return {$s + [a]$}
+				\Else
+					\State \Return {\Call{iterative-gg-permute}{$s,n, push(<a,i,i>,[])$}}
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+	\begin{block}{Iterative permutations}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{iterative-permutations}{$a,i,n$}
+				\State \Return {\Call{iterative-gg-permutations}{$a,i,n,[]$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
 \section{The important things}
 
 \begin{frame}
