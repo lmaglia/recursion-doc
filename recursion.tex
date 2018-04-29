@@ -1502,6 +1502,140 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 			\State \Call{g-copy}{$null,push(<a,[],$\Call{copy}{$first(children(a))$} $+$ \Call{copyChildren}{$tail(children(a))$}$>,p)$}
 		 \EndIf
 	 \end{algorithmic}
+	 Converting line $4$ is tricky and we should probe it. To convert this line we will use  $gCopy$ line $12$. Such equation will be used until $top(p)_1$ is empty. When it is, $top(p)_2$ will contain the copy of all the children of the tree but for the last one. The last one will be added by the equation defined in $g-copy$ line $9$, which will be the equation used when $top(p)_1$ is empty. Thus..
+	 \begin{algorithmic}[1]
+		 \tiny
+		 \If {$isEmpty(children(a))$}
+		 	\State \Call{g-copy}{$null, push(<a, [],[]>,p)$}
+		 \Else
+			\State \Call{g-copy}{\Call{copy}{$first(children(a))$}$,push(<a,tail(children(a)),[]>,p)$}
+		 \EndIf
+	 \end{algorithmic}
+
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N Ary Tree}
+	Let's \textbf{fold} them
+	For line $2$, we will use $gg-copy$ line $5$, and for line $4$ we will use $gg-copy$ line $3$
+	\begin{block}{folding..}
+	 	\begin{algorithmic}[1]
+		 	\tiny
+			 \If {$isEmpty(children(a))$}
+			 	\State \Call{gg-copy}{$null,null, true, push(<a, [],[]>,p)$}
+			 \Else
+				\State \Call{gg-copy}{$first(children(a)),t, false, push(<a,tail(children(a)),[]>,p)$}
+			 \EndIf
+		 \end{algorithmic}
+	\end{block}
+	Now, let's \textbf{unfold} $gg-copy$ line number $5$. The \textbf{unfold} expression is the definition of $g-copy$ itself
+		\begin{algorithmic}[1]
+			\tiny
+				\If {$isEmpty(p)$}
+					\State \Return{$t$}
+				\Else
+					\If {$isEmpty(top(p)_1)$}
+						\If {$isNull(t)$}
+							\State \Return{\Call{g-copy}{$tree(root(top(p)_0), top(p)_2),pop(p)$}}
+						\Else
+							\State \Return{\Call{g-copy}{$tree(root(top(p)_0),top(p)_2 + t),pop(p)$}}
+						\EndIf
+					\Else
+						\State \Return{\Call{g-copy}{\Call{copy}{$first(top(p)_1)$}$, push(<top(p)_0, tail(top(p)_1), top(p)_2 + t>,pop(p))$}}
+					\EndIf
+				\EndIf
+		\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N Ary Tree}
+	Now, we will fold it. For lines $6$ and $8$, we will use $gg-copy$ line $5$, and for line $11$ we will use $gg-copy$ line $3$
+		\begin{algorithmic}[1]
+			\tiny
+				\If {$isEmpty(p)$}
+					\State \Return{$t$}
+				\Else
+					\If {$isEmpty(top(p)_1)$}
+						\If {$isNull(t)$}
+							\State \Return{\Call{gg-copy}{$null,tree(root(top(p)_0), top(p)_2),true,pop(p)$}}
+						\Else
+							\State \Return{\Call{g-copy}{$null,tree(root(top(p)_0),top(p)_2 + t),true, pop(p)$}}
+						\EndIf
+					\Else
+						\State \Return{\Call{gg-copy}{$first(top(p)_1), null, false, push(<top(p)_0, tail(top(p)_1), top(p)_2 + t>,pop(p))$}}
+					\EndIf
+				\EndIf
+		\end{algorithmic}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N Ary Tree}
+	Now, we have a $gg-copy$ \textit{tail recursive}
+	\begin{block}{gg-Copy tail recursive}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{gg-copy}{$a,t,valid,p$}
+				\If {$\neg valid$}
+			 		\If {$isEmpty(children(a))$}
+					 	\State \Call{gg-copy}{$null,null, true, push(<a, [],[]>,p)$}
+					 \Else
+						\State \Call{gg-copy}{$first(children(a)),t, false, push(<a,tail(children(a)),[]>,p)$}
+					 \EndIf				
+				\Else
+					\If {$isEmpty(p)$}
+						\State \Return{$t$}
+					\Else
+						\If {$isEmpty(top(p)_1)$}
+							\If {$isNull(t)$}
+								\State \Return{\Call{gg-copy}{$null,tree(root(top(p)_0), top(p)_2),true,pop(p)$}}
+							\Else
+								\State \Return{\Call{g-copy}{$null,tree(root(top(p)_0),top(p)_2 + t),true, pop(p)$}}
+							\EndIf
+						\Else
+							\State \Return{\Call{gg-copy}{$first(top(p)_1), null, false, push(<top(p)_0, tail(top(p)_1), top(p)_2 + t>,pop(p))$}}
+						\EndIf
+					\EndIf				
+				\EndIf
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N Ary Tree}
+	\begin{block}{Iterative gg-copy}
+		\tiny
+		\begin{algorithmic}[1]
+			\Procedure{iterative-gg-copy}{$a,t,valid,p$}
+				\While{$\neg valid$ $or$ $\neg isEmpty(p)$ }
+					\If {$\neg valid$}
+				 		\If {$isEmpty(children(a))$}	
+							\State $<a,t,valid,p> \gets <null,null,true, push(<a, [],[]>,p)>$
+						 \Else
+						 	\State $<a,t,valid,p> \gets <first(children(a)),t,false, push(<a,tail(children(a)),[]>,p)>$
+						 \EndIf				
+					\Else
+						\If {$isEmpty(top(p)_1)$}
+							\If {$isNull(t)$}
+								\State $<a,t,valid,p> \gets <null,tree(root(top(p)_0), top(p)_2),true,pop(p)>$
+							\Else
+								\State $<a,t,valid,p> \gets <null,tree(root(top(p)_0),top(p)_2 + t),true,pop(p)>$
+							\EndIf
+						\Else
+							\State $<a,t,valid,p> \gets <first(top(p)_1), null, false,push(<top(p)_0, tail(top(p)_1), top(p)_2 + t>,pop(p))>$
+						\EndIf
+					\EndIf
+				\EndWhile
+				\State \Return{$t$}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
+\end{frame}
+\begin{frame}
+	\frametitle{Copy N Ary Tree}
+	\begin{block}{Iterative Copy}
+		\begin{algorithmic}[1]
+			\Procedure{iterative-copy}{$a$}
+				\State \Return{\Call{iterative-gg-copy}{$a,null,false, []$}}
+			\EndProcedure
+		\end{algorithmic}
+	\end{block}
 \end{frame}
 \section{The important things}
 
