@@ -202,6 +202,7 @@
 		\item \textit{Multiple Recursion} is usually converted to a \textit{Nested Recursion} form by adding a new parameter and generalizing its \textit{range}, that is, what it returns. We already know how to convert a \textit{Nested Recursion} form to a \textit{Tail Recursion} form
 	\end{itemize}
 \end{frame}
+\subsection{Converting \textit{GCD}}
 \begin{frame}
 	\frametitle{Tail Recursion to Iterative Transformation}
 	Let's convert recursive \textit{GCD} to an iterative version.
@@ -241,6 +242,7 @@
 		\item We introduce the $tmp$ variable to keep the current value of $a$ which is needed to update $b$ for the next iteration.
 	\end{itemize}
 \end{frame}
+\subsection{Converting \textit{Factorial}}
 \begin{frame}
 	\frametitle{Linear Recursion to Iterative Transformation}
 	Now, we will transform \textit{factorial} recursive version into an iterative one.
@@ -334,6 +336,7 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\subsection{Converting \textit{Ackermann}}
 \begin{frame}
 	\frametitle{Nested Recursion to Iterative Transformation}
 	Now, we will try to tranform our recursive \textit{Ackermann} function into an iterative one. To do so, we will propose a new function such that for some intial values of its parameters, it will equal to \textit{Ackermann}. This new function will replace the \textit{Ackermann}'s first parameter $x$ with an \textit{Stack} $p$. Besides, this new function is \textit{Tail Recursive}
@@ -479,6 +482,7 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\subsection{Converting \textit{Fibonacci}}
 \begin{frame}
 	\frametitle{Multiple Recursive to Iterative Transformation}
 	To convert our \textit{fibonacci} recursive function, we first have to find a new recursive function that calculates \textit{fibonacci} for some parameters and it is a \textit{Nested Recursive} function. Let's try this:
@@ -571,7 +575,7 @@
 						\If{$top(p) = 1$}
 							\State\Return{\Call{tail-fibonacci}{$pop(p),m+1$}}
 						\Else
-							\State\Return{\Call{tail-fibonacci}{$pop(p)$, \Call{nested-fibonacci}{$n-2$,\Call{nested-fibonacci}{$n-1,m$}}}}
+							\State\Return{\Call{tail-fibonacci}{$pop(p)$, \Call{nested-fibonacci}{$top(p)-2$,\Call{nested-fibonacci}{$top(p)-1,m$}}}}
 						\EndIf
 					\EndIf
 				\EndIf
@@ -585,9 +589,9 @@
 	\begin{equation}
 		\tiny
 		\begin{split}
-			tail-fibonacci(pop(p),nested-fibonacci(n-2,nested-fibonacci(n-1,m))) \\ =
-			tail-fibonacci(push(n-2,pop(p)),nested-fibonacci(n-1,m))\\ =
-			tail-fibonacci(push(n-1,push(n-2,pop(p))),m)
+			tail-fibonacci(pop(p),nested-fibonacci(top(p)-2,nested-fibonacci(top(p)-1,m))) \\ =
+			tail-fibonacci(push(top(p)-2,pop(p)),nested-fibonacci(top(p)-1,m))\\ =
+			tail-fibonacci(push(top(p)-1,push(top(p)-2,pop(p))),m)
 		\end{split}
 	\end{equation}
 \end{frame}
@@ -607,7 +611,7 @@
 						\If{$top(p) = 1$}
 							\State\Return{\Call{tail-fibonacci}{$pop(p),m+1$}}
 						\Else
-							\State\Return{\Call{tail-fibonacci}{$push(n-1,push(n-2,pop(p)))$, $m$}}
+							\State\Return{\Call{tail-fibonacci}{$push(top(p)-1,push(top(p)-2,pop(p)))$, $m$}}
 						\EndIf
 					\EndIf
 				\EndIf
@@ -628,8 +632,8 @@
 					\If {$t = 1$}
 						\State $m \gets m+1$
 					\Else
-						\State $p \gets push(n-2,p)$
-						\State $p \gets push(n-1,p)$
+						\State $p \gets push(top(p)-2,p)$
+						\State $p \gets push(top(p)-1,p)$
 					\EndIf
 					\EndIf
 				\EndWhile
@@ -679,7 +683,7 @@
 					\EndProcedure
 				\end{algorithmic}
 			\end{block}
-		\item The running time of this version is still exponential- $\Theta(\frac{1+\sqrt(5)}{2}^n)$-, since for each number calculated, it needs to calculate all the previous numbers more than once. 
+		\item The running time of this version is still exponential- $\Theta((\frac{1+\sqrt{5}}{2})^n)$-, since for each number calculated, it needs to calculate all the previous numbers more than once. 
 	\end{itemize}
 \end{frame}
 \begin{frame}
@@ -969,6 +973,14 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\section{More complex examples}
+\begin{frame}
+	\frametitle{More complex examples}
+	\begin{block}{Note}
+	This section is to show you some more examples. These are a little more complex, and they don't follow the same steps as previous ones.
+	\end{block}
+\end{frame}
+\subsection{Binary Tree Traversal - \textit{inorder}}
 \begin{frame}
 	\frametitle{Some other examples}
 	\begin{block}{InOrder}
@@ -1135,6 +1147,7 @@
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\subsection{Binary Tree Copy}
 \begin{frame}
 	\frametitle{Some other examples}
 	\begin{block}{Copy a Binary tree}
@@ -1372,6 +1385,7 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\subsection{N-Ary Tree Copy}
 \begin{frame}
 	\frametitle{Copy a N-Ary Tree}
 	\begin{block}{Copy a N-Ary Tree}
@@ -1637,6 +1651,7 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
+\subsection{Permutations of an array}
 \begin{frame}
 	\frametitle{Permutations}
 	\begin{block}{Printing Permutations of an array}
@@ -1908,37 +1923,16 @@ Using $gg-copy$ line number $3$, te line number $4$ becomes
 		\end{algorithmic}
 	\end{block}
 \end{frame}
-\section{The important things}
+\section{References}
 
 \begin{frame}
-	\frametitle{The important things}
+	\frametitle{References}
 
 	\begin{enumerate}
-	        \item This just shows the effect of the style
-		\item It is not a Beamer tutorial
-		\item Read the Beamer manual for more help
-		\item Contact me only concerning the style file
+		\item \textit{Programaci\'on Met\'odica}, Jos\'e Luis Balcazar, McGraw, Hill / Interamericana de Espa\~na 
+		\item \url{http://cs-fundamentals.com/c-programming/recursion-in-c.php}
+		\item \url{http://www.sparknotes.com/cs/recursion/whatisrecursion/}
+		\item \url{https://stackoverflow.com/questions/18172257/efficient-calculation-of-fibonacci-series}
 	\end{enumerate}
-\end{frame}
-
-\section{Analysis of the work}
-
-\begin{frame}
-	  \frametitle{Analysis of the work}
-
-	    This style file gives your slides some nice Radboud branding.
-	    When you know how to work with the Beamer package it is easy to use.
-	    Just add:\\ ~~~$\backslash$usepackage$\{$ru$\}$ \\ at the top of your file.
-\end{frame}
-
-\section{Conclusion}
-
-\begin{frame}
-	  \frametitle{Conclusion}
-
-	  \begin{itemize}
-	  	\item Easy to use
-		\item Good results
-	  \end{itemize}
 \end{frame}
 \end{document}
